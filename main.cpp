@@ -43,8 +43,8 @@ using namespace chibios_rt;
 #include "STM32F4xx_StdPeriph_Driver/stm32f4_gpio_af.h"
 #include "STM32F4xx_StdPeriph_Driver/stm32f4xx_rcc.h"
 
-//#define HW_412 TRUE
-#define DISCO_407 FALSE
+#define HW_412 TRUE
+//#define DISCO_407 FALSE
 #ifdef DISCO_407
 //#define BLUE_LED LINE_LED6 //=> Manually activated LED
 //#define RED_LED LINE_LED5   // => Shell active
