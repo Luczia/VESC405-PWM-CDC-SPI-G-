@@ -65,14 +65,14 @@ static THD_FUNCTION(Thread2, arg) {
   chRegSetThreadName("shell_handler");
 
   while (true){
-    /*if (SDU1.config->usbp->state == USB_ACTIVE) {
+    if (SDU1.config->usbp->state == USB_ACTIVE) {
                 //palSetLine(LED_RED);
                 thread_t *shelltp = chThdCreateFromHeap(NULL, SHELL_WA_SIZE,
                                                         "shell", NORMALPRIO + 1,
                                                         shellThread, (void *)&shell_cfg1);
                 chThdWait(shelltp);               // Waiting termination.
                // palClearLine(LED_RED);
-    }*/
+    }
     chThdSleepMilliseconds(1000);
   }
 }
