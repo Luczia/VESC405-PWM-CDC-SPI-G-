@@ -135,6 +135,9 @@
 // Hall/encoder pins
 #define HW_HALL_ENC_GPIO1		GPIOB
 #define HW_HALL_ENC_PIN1		6
+#define HW_HALL_ENC_LINE1       PAL_LINE(GPIOB, 6)
+
+#define HW_HALL_ENC_PIN1        6
 #define HW_HALL_ENC_GPIO2		GPIOB
 #define HW_HALL_ENC_PIN2		7
 #define HW_HALL_ENC_GPIO3		GPIOC

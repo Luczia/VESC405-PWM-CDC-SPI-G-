@@ -148,7 +148,7 @@ CSRC = $(ALLCSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-         ichausmu/IcHausMu.cpp \
+         ichausmu/IcHausMu.cpp encoder.cpp \
          main.cpp
 
 # List ASM source files here.

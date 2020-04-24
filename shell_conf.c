@@ -9,19 +9,16 @@
 
 #include "shell.h"
 #include "chprintf.h"
+//#include <chstreams.h>
 
 #include "usb_otg/usbcfg.h"
 
-
-//#include "ichausmu/icmu_utils.h"
-//#include "ichausmu/icmu_utils.hpp"
-
+#define LED_ORANGE PAL_LINE(GPIOC,0)
 #define TEST BUS_SIZE
 
 /*===========================================================================*/
 /* Command line/shell related.                                                     */
 /*===========================================================================*/
-
 
 
 /* Can be measured using dd if=/dev/xxxx of=/dev/null bs=512 count=10000.*/
@@ -68,32 +65,46 @@ void cmd_led(BaseSequentialStream *chp, int argc, char *argv[])
 {
   (void)argv;
    if (argc > 0) {
-     chprintf(chp, "Usage: led\r\n Will Toggle the RED LED \r\n");
+     chprintf(chp, "Usage: led\r\n Will Toggle the external Orange LED \r\n");
      return;
    }
-   palToggleLine(LINE_LED6);
+   palToggleLine(LED_ORANGE);
+   chprintf((BaseSequentialStream*)&SDU1, "D: LED Switched");
 }
 
-#define TEST TETA
 
 void cmd_spi(BaseSequentialStream *chp, int argc, char *argv[])
 {
   (void)argv;
    if (argc > 0) {
-     chprintf(chp, "Usage: led\r\n Will Send a SPI frame  \r\n");
+     chprintf(chp, "Usage: spi\r\n Will Send a SPI frame with icmu lib \r\n");
      return;
    }
-  //basicSpiInitFrame();
-   basicSpiComTest();
-   test();
-   sdPutTimeout(&SD2, (int8_t)'t',TIME_MS2I(50));
+      uint16_t frame = spiReadFrame();
+      chprintf((BaseSequentialStream*)&SDU1, "D: SPIread : %d \r\n", frame);
+
 }
 
+void cmd_ispi(BaseSequentialStream *chp, int argc, char *argv[])
+{
+  (void)argv;
+   if (argc > 0) {
+     chprintf(chp, "Usage: bspi\r\n Will Send an init frame \r\n");
+     return;
+   }
+   uint8_t init = spiInitFrame();
+
+   uint8_t msg[] = "\r\nD: Init :";
+   chprintf((BaseSequentialStream*)&SDU1, "D: SPIinit : %d \r\n", init);
+
+
+}
 
 const ShellCommand commands[] = {
   {"write", cmd_write},
   {"led", cmd_led},
   {"spi", cmd_spi},
+  {"ispi", cmd_ispi},
   {NULL, NULL}
 };
 

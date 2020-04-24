@@ -22,27 +22,6 @@
 #include "rt_test_root.h"
 #include "oslib_test_root.h"
 
-#include "shell.h"
-#include "chprintf.h"
-
-#include "usb_otg/usbcfg.h"
-//#include "comm_usb_serial.h"
-//#include "comm_usb.h"
-
-using namespace chibios_rt;
-
-#include "ichausmu/IcHausMu.hpp"
-#include "ichausmu/icmu_utils.h"
-
-#include "lib.h"
-
-#include "spi_conf.h"
-#include "pwm_conf.h"
-#include "shell_conf.h"
-
-#include "STM32F4xx_StdPeriph_Driver/stm32f4_gpio_af.h"
-#include "STM32F4xx_StdPeriph_Driver/stm32f4xx_rcc.h"
-
 #define HW_412 TRUE
 //#define DISCO_407 FALSE
 #ifdef DISCO_407
@@ -54,7 +33,32 @@ using namespace chibios_rt;
 #include "hw_410.h"
 #define LED_GREEN PAL_LINE(GPIOC, 4) //LINE_LED4//
 #define LED_RED PAL_LINE(GPIOC, 5) //LINE_LED5 //
+#define LED_ORANGE PAL_LINE(GPIOC,0)
 #endif
+
+#include "shell.h"
+#include "chprintf.h"
+
+#include "usb_otg/usbcfg.h"
+//#include "comm_usb_serial.h"
+//#include "comm_usb.h"
+
+using namespace chibios_rt;
+
+//#include "test.h"
+#include "ichausmu/IcHausMu.hpp"
+#include "encoder.h"
+
+#include "lib.h"
+
+#include "spi_conf.h"
+#include "pwm_conf.h"
+#include "shell_conf.h"
+
+#include "STM32F4xx_StdPeriph_Driver/stm32f4_gpio_af.h"
+#include "STM32F4xx_StdPeriph_Driver/stm32f4xx_rcc.h"
+
+
 /*===========================================================================*/
 /* Shell Handler thread to spawn a shell                                                             */
 /*===========================================================================*/
@@ -117,30 +121,29 @@ void hw_init_gpio(void);
  */
 int main(void) {
 
+
+
+  halInit();
+
+  System::init();  //chSysInit();
+
+
+
 #ifdef HW_412
   hw_init_gpio();
 #endif
 
-  halInit();
-  //chSysInit();
-  System::init();
 
-  // Shell manager initialization.
-  //shellInit();
-
-  //Initialize pullup for LEDs
-  palSetPadMode(GPIOC, 4, PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
-  palSetPadMode(GPIOC, 5, PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
   //Initialize pads and AF(Alternate functions) for PWM
-  palSetPadMode(GPIOA, 8, PAL_MODE_ALTERNATE(1)); //PWM on PA8(dico) or D7(nucleo/arduino header)
+  //palSetPadMode(GPIOA, 8, PAL_MODE_ALTERNATE(1)); //PWM on PA8(dico) or D7(nucleo/arduino header)
   //Initialize pads and AF for Serial UART 2 */
   //palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
  // palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
   /*Initialize pads and AF for SPI */
-  //palSetPadMode(PORT_SPI1_SCK, PIN_SPI1_SCK,PAL_MODE_ALTERNATE(5) | PAL_STM32_OSPEED_HIGHEST);    /* New SCK */
- // palSetPadMode(PORT_SPI1_MISO, PIN_SPI1_MISO,PAL_MODE_ALTERNATE(5) | PAL_STM32_OSPEED_HIGHEST);    /* New MISO*/
-  //palSetPadMode(PORT_SPI1_MOSI, PIN_SPI1_MOSI, PAL_MODE_ALTERNATE(5) | PAL_STM32_OSPEED_HIGHEST);    /* New MOSI*/
-  //palSetPadMode(PORT_SPI1_CS, PIN_SPI1_CS, PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);//PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST); /* New CS*/
+  palSetPadMode(PORT_SPI1_SCK, PIN_SPI1_SCK,PAL_MODE_ALTERNATE(5) | PAL_STM32_OSPEED_HIGHEST);    /* New SCK */
+  palSetPadMode(PORT_SPI1_MISO, PIN_SPI1_MISO,PAL_MODE_ALTERNATE(5) | PAL_STM32_OSPEED_HIGHEST);    /* New MISO*/
+  palSetPadMode(PORT_SPI1_MOSI, PIN_SPI1_MOSI, PAL_MODE_ALTERNATE(5) | PAL_STM32_OSPEED_HIGHEST);    /* New MOSI*/
+  palSetPadMode(PORT_SPI1_CS, PIN_SPI1_CS, PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);//PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST); /* New CS*/
 
   //Initialize pads for VPC
   palSetPadMode(GPIOA, 11, PAL_MODE_ALTERNATE(GPIO_AF_OTG_FS) | PAL_STM32_OTYPE_PUSHPULL | PAL_STM32_OSPEED_MID1);
@@ -148,16 +151,8 @@ int main(void) {
 
   init_usb_cdc();
 
-  //comm_usb_init();
-   test32(4);
-  //Start Serial on UART 2
-  //sdStart(&SD2, NULL);
-  //Start PWM
-  //pwmStart(&PWMD1, &pwmcfg);
   //Start SPI
-  //spiStart(&SPID1, &cs_spicfg); //Power Up the clock signal and start the driver
-  //Confirm boot to the computer
-  //sdWriteTimeout(&SD2, (uint8_t*)"\r\n!System Initialized!\r\n", 25, TIME_MS2I(50));
+  spiStart(&SPID1, &cs_spicfg); //Power Up the clock signal and start the driver
 
 
   //Start PWM
@@ -194,11 +189,11 @@ int main(void) {
         uint8_t msg[] = "\r\nD: SPI frame sent";
         chnWrite(&SDU1, msg, sizeof msg); //Example to send Debug Message on the VCP (Virtual Com Port)
         }*/
-    //palTogglePad(GPIOD, LED_GREEN);
-    uint8_t msg[] = "\r\nD: Main";
-    chnWrite(&SDU1, msg, sizeof msg); //Example to send Debug Message on the VCP (Virtual Com Port
+    ///palToggleLine(LED_ORANGE);
+//    uint8_t msg[] = "\r\nD: M";
+//    chnWrite(&SDU1, msg, sizeof msg); //Example to send Debug Message on the VCP (Virtual Com Port
 
-    BaseThread::sleep(TIME_MS2I(5000)); // chThdSleepMilliseconds(200); // in C;
+    BaseThread::sleep(TIME_MS2I(10000)); // chThdSleepMilliseconds(200); // in C;
   }
 
   return 0;
@@ -215,6 +210,10 @@ void hw_init_gpio(void) {
     // LEDs
     palSetPadMode(GPIOC, 4,PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
     palSetPadMode(GPIOC, 5, PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
+    palSetPadMode(GPIOC, 0, PAL_MODE_OUTPUT_PUSHPULL | PAL_STM32_OSPEED_HIGHEST);
+
+    palClearPad(GPIOC,0);
+
 
     // GPIOC (ENABLE_GATE)
     palSetPadMode(GPIOC, 10, PAL_MODE_OUTPUT_PUSHPULL |  PAL_STM32_OSPEED_HIGHEST);
@@ -252,7 +251,7 @@ void hw_init_gpio(void) {
     palSetPadMode(GPIOB, 0, PAL_MODE_INPUT_ANALOG);
     palSetPadMode(GPIOB, 1, PAL_MODE_INPUT_ANALOG);
 
-    palSetPadMode(GPIOC, 0, PAL_MODE_INPUT_ANALOG);
+    //palSetPadMode(GPIOC, 0, PAL_MODE_INPUT_ANALOG);
     palSetPadMode(GPIOC, 1, PAL_MODE_INPUT_ANALOG);
     palSetPadMode(GPIOC, 2, PAL_MODE_INPUT_ANALOG);
     palSetPadMode(GPIOC, 3, PAL_MODE_INPUT_ANALOG);
