@@ -8,6 +8,12 @@
 #ifndef SPI_CONF_H_
 #define SPI_CONF_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 #define PORT_SPI1_CS    GPIOA
 #define PIN_SPI1_CS     4
 #define PORT_SPI1_SCK   GPIOA
@@ -27,10 +33,10 @@
 #define PIN_SPI2_MOSI   15
 
 
-
-/*Low speed SPI configuration (164.125kHz, CPHA=0, CPOL=0, MSb first).
- */
-
+//The reference for SPICom Thread variable must be initially set to NULL.
+extern thread_reference_t spi_thread_ref;
+/*
+//Low speed SPI configuration (164.125kHz, CPHA=0, CPOL=0, MSb first).
 static const SPIConfig ls_spicfg = {
   false,
   NULL,
@@ -40,9 +46,7 @@ static const SPIConfig ls_spicfg = {
   0
 };
 
-/*
- * Custom speed SPI configuration (1.3MHz, CPHA=0, CPOL=0, MSb first).
- */
+//Custom speed SPI configuration (1.3MHz, CPHA=0, CPOL=0, MSb first).
 static const SPIConfig cs_spicfg = {
   false,
   NULL,
@@ -51,22 +55,22 @@ static const SPIConfig cs_spicfg = {
   SPI_CR1_BR_2 , // | SPI_CR1_CPOL, //mask definition in C:\ChibiStudio\chibios_trunk\os\common\ext\ST\STM32F4xx\stm32f401xe.h
   0
 };
+*/
 
-/*
- * Custom speed SPI configuration (656kHz, CPHA=0, CPOL=0, MSb first).
- */
+//Custom speed SPI configuration (656kHz, CPHA=0, CPOL=0, MSb first).
 static const SPIConfig cs_spicfg1 = {
   false,
+
   NULL,
   PORT_SPI1_CS,
   PIN_SPI1_CS,
-  SPI_CR1_BR_2 | SPI_CR1_BR_0, // | SPI_CR1_CPOL, //mask definition in C:\ChibiStudio\chibios_trunk\os\common\ext\ST\STM32F4xx\stm32f401xe.h
-  0
+  SPI_CR1_BR_2 | SPI_CR1_BR_1, //  SPI_CR1_CPOL | SPI_CR1_CPHA | //mask definition in C:\ChibiStudio\chibios_trunk\os\common\ext\ST\STM32F4xx\stm32f401xe.h
+  0//SPI_CR2_FRF
 };
 
 /*
-* Maximum speed SPI configuration (42MHz, CPHA=0, CPOL=0, MSb first).
-*/ //Fonctionne avec SPI_SELECT_MODE_NONE
+//Maximum speed SPI configuration (42MHz, CPHA=0, CPOL=0, MSb first).
+//Fonctionne avec SPI_SELECT_MODE_NONE
 static const SPIConfig hs_spicfg = {
   false,
   NULL,
@@ -74,6 +78,23 @@ static const SPIConfig hs_spicfg = {
   PIN_SPI1_CS,
   0,
   0
+};*/
+
+
+/*
+ * GPT3 configuration.
+ */
+static const GPTConfig gpt3cfg = {
+  1000000,    /* 1MHz timer clock.*/
+  NULL,   /* Timer callback.*/
+  0,
+  0
 };
+
+#ifdef __cplusplus
+}
+#endif
+
+
 
 #endif /* SPI_CONF_H_ */

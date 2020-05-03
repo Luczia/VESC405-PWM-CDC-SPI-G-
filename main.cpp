@@ -23,10 +23,10 @@
 #include "oslib_test_root.h"
 
 #define HW_412 TRUE
-//#define DISCO_407 FALSE
+//#define DISCO_407 TRUE
 #ifdef DISCO_407
 //#define BLUE_LED LINE_LED6 //=> Manually activated LED
-//#define RED_LED LINE_LED5   // => Shell active
+#define RED_ORANGE LINE_LED5   // => Shell active
 #define LED_GREEN LINE_LED4 // => HeartBeat
 #define LED_RED LINE_LED3 // => OTG_USB_Com active
 #elif HW_412
@@ -90,7 +90,7 @@ static THD_FUNCTION(Thread1, arg) {
   chRegSetThreadName("com_status");
   while (true) {
     systime_t time = 500;
-    time = serusbcfg.usbp->state == USB_ACTIVE ? 250 : 1000;
+    time = serusbcfg.usbp->state == USB_ACTIVE ? 250 : 2000;
     palClearLine(LED_RED);
     chThdSleepMilliseconds(time);
     palSetLine(LED_RED);
@@ -115,6 +115,8 @@ static THD_FUNCTION(Thread3, arg) {
 
 
 void hw_init_gpio(void);
+
+
 
 /*
  * Application entry point.
@@ -152,8 +154,13 @@ int main(void) {
   init_usb_cdc();
 
   //Start SPI
-  spiStart(&SPID1, &cs_spicfg); //Power Up the clock signal and start the driver
+  spiStart(&SPID1, &cs_spicfg1); //Power Up the clock signal and start the driver
+  //Initialize the encoder
+  initIcHausMu();
+  //Intialize the GPT
+  gptStart(&GPTD3, &gpt3cfg);
 
+  uint8_t txbuf3[2],rxbuf3[2];
 
   //Start PWM
   //pwmChangePeriod(&PWMD1, 500);
@@ -168,10 +175,6 @@ int main(void) {
   chThdCreateStatic(waThread2, sizeof(waThread2), LOWPRIO, Thread2, NULL);
   //Create the heartbeat thread
   chThdCreateStatic(waThread3, sizeof(waThread3), NORMALPRIO, Thread3, NULL);
-
-  ///Init encoder;
-        //encoder.csFunctionAttach(ChangeCS);
-        //encoder.streamFunctionAttach(TransferIcMU);
 
 
 

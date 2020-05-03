@@ -87,6 +87,7 @@ build/obj/shell_conf.o: shell_conf.c ../../chibios191/os/rt/include/ch.h \
  ../../chibios191/os/hal/include/hal_crypto.h \
  ../../chibios191/os/hal/include/hal_dac.h \
  ../../chibios191/os/hal/include/hal_gpt.h \
+ ../../chibios191/os/hal/ports/STM32/LLD/TIMv1/hal_gpt_lld.h \
  ../../chibios191/os/hal/include/hal_i2c.h \
  ../../chibios191/os/hal/include/hal_i2s.h \
  ../../chibios191/os/hal/include/hal_icu.h \
@@ -114,7 +115,7 @@ build/obj/shell_conf.o: shell_conf.c ../../chibios191/os/rt/include/ch.h \
  ../../chibios191/os/various/shell/shell.h \
  ../../chibios191/os/hal/lib/streams/chprintf.h \
  c:\chibistudio\tools\gnu\ tools\ arm\ embedded\7.0\ 2017q4\lib\gcc\arm-none-eabi\7.2.1\include\stdarg.h \
- usb_otg/usbcfg.h
+ spi_conf.h usb_otg/usbcfg.h
 
 ../../chibios191/os/rt/include/ch.h:
 
@@ -302,6 +303,8 @@ cfg/mcuconf.h:
 
 ../../chibios191/os/hal/include/hal_gpt.h:
 
+../../chibios191/os/hal/ports/STM32/LLD/TIMv1/hal_gpt_lld.h:
+
 ../../chibios191/os/hal/include/hal_i2c.h:
 
 ../../chibios191/os/hal/include/hal_i2s.h:
@@ -355,5 +358,7 @@ cfg/mcuconf.h:
 ../../chibios191/os/hal/lib/streams/chprintf.h:
 
 c:\chibistudio\tools\gnu\ tools\ arm\ embedded\7.0\ 2017q4\lib\gcc\arm-none-eabi\7.2.1\include\stdarg.h:
+
+spi_conf.h:
 
 usb_otg/usbcfg.h:

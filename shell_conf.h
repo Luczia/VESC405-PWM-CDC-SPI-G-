@@ -23,6 +23,8 @@ void cmd_write(BaseSequentialStream *chp, int argc, char *argv[]);
 void cmd_led(BaseSequentialStream *chp, int argc, char *argv[]);
 void cmd_spi(BaseSequentialStream *chp, int argc, char *argv[]);
 void cmd_ispi(BaseSequentialStream *chp, int argc, char *argv[]);
+void cmd_bspi(BaseSequentialStream *chp, int argc, char *argv[]);
+
 
 #ifdef __cplusplus
 }

@@ -89,6 +89,7 @@ build/obj/hal_lld.o: \
  ../../chibios191/os/hal/include/hal_crypto.h \
  ../../chibios191/os/hal/include/hal_dac.h \
  ../../chibios191/os/hal/include/hal_gpt.h \
+ ../../chibios191/os/hal/ports/STM32/LLD/TIMv1/hal_gpt_lld.h \
  ../../chibios191/os/hal/include/hal_i2c.h \
  ../../chibios191/os/hal/include/hal_i2s.h \
  ../../chibios191/os/hal/include/hal_icu.h \
@@ -299,6 +300,8 @@ cfg/mcuconf.h:
 ../../chibios191/os/hal/include/hal_dac.h:
 
 ../../chibios191/os/hal/include/hal_gpt.h:
+
+../../chibios191/os/hal/ports/STM32/LLD/TIMv1/hal_gpt_lld.h:
 
 ../../chibios191/os/hal/include/hal_i2c.h:
 

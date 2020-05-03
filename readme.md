@@ -18,8 +18,13 @@ ChibiOS/RT base devlopment code for F405 Board
   
   Just modify the makefile variable CHIBIOS to adjust the location of your chibiOS source files.
   
-  
-  Hopefully it can be usefull to some wanderer lost in the ChibiOS world, it took me quite some times to get all those examples running with this beautiful but complex RTOS.
+To use SPI com with icmu :
+
+     -- bspi sends a basic frame to check connectivity of the icmu without using ichausmu library (just reading the HW revision of the board)
+     -- ispi launches the 5 request to initialize the icmu and provide a command feedback for each commmand (feedback = 0 is good)
+     -- spi launchs a position command reading
+     
+     
   
   
 
